@@ -11,11 +11,27 @@ pipeline {
                 credentialsId: "github-ssh"
             }
         }
-        stage('Test') {
+        stage('Del ingres word 5.3') {
             steps {
                 sh """
                 kubectl delete -f ingres.yaml
                 git checkout update
+                """
+            }
+        }
+        stage('Kubeval test') {
+            steps {
+                sh """
+                kubeval deploy.yaml -o json
+                kubeval pv.yaml -o json
+                kubeval pvc.yaml -o json
+                kubeval ingres.yaml -o json
+                """
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh """
                 kubectl apply -f pv.yaml
                 kubectl apply -f pvc.yaml
                 kubectl apply -f deploy.yaml

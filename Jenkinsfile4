@@ -11,7 +11,7 @@ pipeline {
                 credentialsId: "github-ssh"
             }
         }
-        stage('Test') {
+        stage('rollout 5.4') {
             steps {
                 sh """
                 git checkout master

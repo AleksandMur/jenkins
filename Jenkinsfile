@@ -11,7 +11,17 @@ pipeline {
                 credentialsId: "github-ssh"
             }
         }
-        stage('Test') {
+        stage('Kubeval test') {
+            steps {
+                sh """
+                kubeval deploy.yaml -o json
+                kubeval pv.yaml -o json
+                kubeval pvc.yaml -o json
+                kubeval ingres.yaml -o json
+                """
+            }
+        }
+        stage('Deploy') {
             steps {
                 sh """
                 kubectl apply -f pv.yaml
